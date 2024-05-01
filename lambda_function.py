@@ -29,8 +29,8 @@ def send_email(sender_email, recipient_email, subject, body):
         print("Email sent successfully!")
 
 def lambda_handler(event, context):
-    sender_email = "aisha.fathy.zaki@gmail.com"
-    recipient_email = "aisha.fathy.zaki@gmail.com"
+    sender_email = "your sender email"
+    recipient_email = "receiver email"
 
     subject = "Terraform State Change Report"
     event_record = event.get('Records', [{}])[0] 
