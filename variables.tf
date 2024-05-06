@@ -3,6 +3,11 @@ variable vpc_cidr {
     description = "vpc cidr block"
 }
 
+variable env {
+    type = string
+    description = "workspace environment"
+}
+
 variable public_subnet_1 {
     type = string
 }
