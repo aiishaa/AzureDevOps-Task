@@ -53,24 +53,13 @@ resource "aws_lambda_permission" "allow_s3_bucket" {
   source_arn    = data.aws_s3_bucket.backend_bucket.arn
 }
 
-resource "aws_s3_bucket_notification" "bucket_notification_dev_env" {
+resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = data.aws_s3_bucket.backend_bucket.id
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.ses-lambda.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "env%3A/dev/terraform.tfstate"
-  }
-  depends_on = [aws_lambda_permission.allow_s3_bucket]
-}
-
-resource "aws_s3_bucket_notification" "bucket_notification_prod_env" {
-  bucket = data.aws_s3_bucket.backend_bucket.id
-
-  lambda_function {
-    lambda_function_arn = aws_lambda_function.ses-lambda.arn
-    events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "env%3A/prod/terraform.tfstate"
+    filter_prefix       = "env%3A/${vars.env}/terraform.tfstate"
   }
   depends_on = [aws_lambda_permission.allow_s3_bucket]
 }
