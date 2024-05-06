@@ -59,7 +59,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.ses-lambda.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "env%3A/${vars.env}/terraform.tfstate"
+    filter_prefix       = "env%3A/${var.env}/terraform.tfstate"
   }
   depends_on = [aws_lambda_permission.allow_s3_bucket]
 }
