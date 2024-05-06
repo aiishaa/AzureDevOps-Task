@@ -5,6 +5,7 @@ public_subnet_2   = "10.0.3.0/24"
 private_subnet_2  = "10.0.4.0/24"
 ec2_instance_type = "t2.micro"
 region            = "us-east-1"
+env               = "dev"
 # subnets_details = subnets_details=[
 
 # {
