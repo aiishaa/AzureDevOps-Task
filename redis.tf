@@ -9,19 +9,19 @@ resource "aws_elasticache_subnet_group" "redis_subnet_group" {
 resource "aws_security_group" "redis-SG" {
     vpc_id = module.my-vpc.my_vpc.id
     ingress {
-        from_port   = 6379
-        to_port     = 6379
+        from_port   = var.cluster_port
+        to_port     = var.cluster_port
         protocol    = "tcp"
         security_groups = [aws_security_group.rds-SG.id]
     }
 }
 resource "aws_elasticache_cluster" "elasticache-redis" {
-  cluster_id           = "my-redis-cluster"
-  engine               = "redis"
-  node_type            = "cache.m4.large"
-  num_cache_nodes      = 1
+  cluster_id           = var.cluster_id
+  engine               = var.cluster_engine
+  node_type            = var.cluster_nodetype
+  num_cache_nodes      = var.cluster_nOfnodes
   parameter_group_name = "default.redis7"
-  port                 = 6379
+  port                 = var.cluster_port
   security_group_ids = [aws_security_group.redis-SG.id]
   subnet_group_name = aws_elasticache_subnet_group.redis_subnet_group.name
 }
