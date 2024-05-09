@@ -11,20 +11,20 @@ resource "aws_db_subnet_group" "my_db_subnet_group" {
 resource "aws_security_group" "rds-SG" {
     vpc_id = module.my-vpc.my_vpc.id
     ingress {
-        from_port   = 3306
-        to_port     = 3306
+        from_port   = var.db_port
+        to_port     = var.db_port
         protocol    = "tcp"
         security_groups = [aws_security_group.backend_SG.id]
     }
 }
 
 resource "aws_db_instance" "rds-db" {
-  allocated_storage = 10
-  db_name              = "mydb"
-  engine               = "mysql"
-  instance_class       = "db.t3.micro"
-  username             = "aisha"
-  password             = "12345678"
+  allocated_storage    = var.db_allocated_storage
+  db_name              = var.db_name
+  engine               = var.db_engine
+  instance_class       = var.db_instance_class
+  username             = var.db_password
+  password             = var.db_password
   skip_final_snapshot  = true
   vpc_security_group_ids = [aws_security_group.rds-SG.id]
   db_subnet_group_name = aws_db_subnet_group.my_db_subnet_group.name
