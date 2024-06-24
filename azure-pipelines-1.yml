@@ -16,9 +16,13 @@ stages:
       - job: InstallDockerJob
         displayName: 'Install Docker'
         steps:
-          - task: DockerInstaller@0
-            inputs:
-              dockerVersion: '17.09.0-ce'
+          - script: |
+              # Install Docker
+              curl -fsSL https://get.docker.com -o get-docker.sh
+              sudo sh get-docker.sh
+              sudo usermod -aG docker $(whoami)
+              # newgrp docker
+            displayName: 'Install Docker'
 
   - stage: Login
     displayName: 'Docker Login'
