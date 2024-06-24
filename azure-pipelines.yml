@@ -36,11 +36,11 @@ stages:
           - task: TerraformTaskV4@4
             inputs:
               provider: 'aws'
-              backendServiceAWS: 'aws_for_terraform'
               command: 'init'
+              backendServiceAWS: 'aws_for_terraform'
           - task: TerraformTaskV1@0
             inputs:
               provider: 'aws' 
-              backendServiceAWS: 'aws_for_terraform'
               command: 'plan'
               commandOptions: '-out=tfplan -input=false'
+              backendServiceAWS: 'aws_for_terraform'
