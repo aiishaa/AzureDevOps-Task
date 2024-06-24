@@ -40,11 +40,14 @@ stages:
               backendServiceAWS: 'aws_for_terraform'
               backendAWSBucketName: 's3-terraform-backend-bucket-123456'
               backendAWSKey: 'terraform.tfstate'
-              
-          - script: |
-              secret_value=$(aws secretsmanager get-secret-value --secret-id MyTerraformVarsSecret --query SecretString --output text)
-              echo "$secret_value" > terraform.tfvars
-              displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
+          - task: AWSCLI@1
+            inputs:
+              awsCredentials: 'AWS Service Connection'
+              regionName: 'us-east-1'
+              command: 'secretsmanager'
+              subCommand: 'get-secret-value'
+              arguments: '--secret-id MyTerraformVarsSecret --query SecretString --output text > terraform.tfvars'
+
           - task: TerraformTaskV4@4
             inputs:
               provider: 'aws'
