@@ -40,15 +40,7 @@ stages:
               backendServiceAWS: 'aws_for_terraform'
               backendAWSBucketName: 's3-terraform-backend-bucket-123456'
               backendAWSKey: 'terraform.tfstate'
-          - task: AWSShellScript@1
-            inputs:
-              awsCredentials: 'AWS Service Connection'
-              regionName: 'us-east-1'
-              scriptType: 'inline'
-              inlineScript: |
-                curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                unzip awscliv2.zip
-                sudo ./aws/install
+      
           - script: |
               # Fetch Terraform variables from AWS Secrets Manager
               secret_value=$(aws secretsmanager get-secret-value --secret-id MyTerraformVarsSecret --query SecretString --output text)
