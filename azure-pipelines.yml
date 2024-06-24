@@ -43,7 +43,7 @@ stages:
       
           - script: |
               # Fetch Terraform variables from AWS Secrets Manager
-              secret_value=$(aws secretsmanager get-secret-value --secret-id MyTerraformVarsSecret --query SecretString --output text)
+              secret_value=$(aws secretsmanager get-secret-value --secret-id development-secrets --query SecretString --output text)
               echo "$secret_value" > terraform.tfvars
               cat terraform.tfvars
             displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
