@@ -38,6 +38,8 @@ stages:
               provider: 'aws'
               command: 'init'
               backendServiceAWS: 'aws_for_terraform'
+              backendAWSBucketName: 's3-terraform-backend-bucket-123456'
+              backendAWSKey: 'terraform.tfstate'
           - task: TerraformTaskV1@0
             inputs:
               provider: 'aws' 
