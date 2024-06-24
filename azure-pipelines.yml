@@ -41,7 +41,6 @@ stages:
               backendServiceAWS: 'aws_for_terraform'
               backendAWSBucketName: 's3-terraform-backend-bucket-123456'
               backendAWSKey: 'terraform.tfstate'
-      
           - script: |
               # Fetch Terraform variables from AWS Secrets Manager
               secret_value=$(aws secretsmanager get-secret-value --secret-id development-secrets --query SecretString --output text)
@@ -49,11 +48,49 @@ stages:
               # Convert JSON secret to terraform.tfvars format
               echo "$secret_value" | jq -r 'to_entries | .[] | "\(.key) = \(.value | tojson)"' > terraform.tfvars
               cat terraform.tfvars
-              
             displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
           - task: TerraformTaskV4@4
             inputs:
               provider: 'aws'
               command: 'plan'
+              commandOptions: '-var-file=terraform.tfvars'
+              environmentServiceNameAWS: 'aws_for_terraform'
+
+  - stage: Apply
+    displayName: 'Apply Terraform'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), ne(variables['System.PullRequest.PullRequestId'], ''))
+    jobs:
+      - job: Apply
+        displayName: 'Terraform Apply'
+        steps:
+          - checkout: self
+          - task: AWSShellScript@1
+            inputs:
+              awsCredentials: 'AWS Service Connection'
+              regionName: 'us-east-1'
+              scriptType: 'inline'
+              inlineScript: 'sudo apt install unzip && sudo apt install jq'
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'aws'
+              command: 'init'
+              backendServiceAWS: 'aws_for_terraform'
+              backendAWSBucketName: 's3-terraform-backend-bucket-123456'
+              backendAWSKey: 'terraform.tfstate'
+          - script: |
+              # Fetch Terraform variables from AWS Secrets Manager
+              secret_value=$(aws secretsmanager get-secret-value --secret-id development-secrets --query SecretString --output text)
+
+              # Convert JSON secret to terraform.tfvars format
+              echo "$secret_value" | jq -r 'to_entries | .[] | "\(.key) = \(.value | tojson)"' > terraform.tfvars
+              cat terraform.tfvars
+            displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
+          - task: TerraformTaskV4@4
+            inputs:
+              provider: 'aws'
+              command: 'apply'
               commandOptions: '-var-file=terraform.tfvars'
               environmentServiceNameAWS: 'aws_for_terraform'
