@@ -67,5 +67,5 @@ stages:
             inputs:
               containerRegistry: 'docker-hub'
               repository: 'aishafathy/nodeapp'
-              command: 'start'
+              command: 'run'
               arguments: '-d -p 8080:80 $(imageName)'
