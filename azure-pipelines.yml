@@ -29,7 +29,7 @@ stages:
               awsCredentials: 'AWS Service Connection'
               regionName: 'us-east-1'
               scriptType: 'inline'
-              inlineScript: 'sudo apt install unzip'
+              inlineScript: 'sudo apt install unzip && sudo apt install jq'
           - task: TerraformInstaller@1
             inputs:
               terraformVersion: 'latest'
