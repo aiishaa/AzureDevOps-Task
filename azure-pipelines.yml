@@ -19,6 +19,7 @@ pool:
 stages:
   - stage: Plan
     displayName: 'Plan Terraform'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
     jobs:
       - job: Plan
         displayName: 'Terraform Plan'
