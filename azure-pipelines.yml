@@ -44,9 +44,9 @@ stages:
             inputs:
               awsCredentials: 'AWS Service Connection'
               regionName: 'us-east-1'
-              command: 'secretsmanager'
-              subCommand: 'get-secret-value'
-              arguments: '--secret-id MyTerraformVarsSecret --query SecretString --output text > terraform.tfvars'
+              awsCommand: 'secretsmanager'
+              awsSubCommand: 'get-secret-value'
+              awsArguments: '--secret-id development-secrets --query SecretString --output text > terraform.tfvars'
 
           - task: TerraformTaskV4@4
             inputs:
