@@ -21,8 +21,12 @@ stages:
               curl -fsSL https://get.docker.com -o get-docker.sh
               sudo sh get-docker.sh
               sudo usermod -aG docker $(whoami)
-              # newgrp docker
+              # sudo chmod 666 /var/run/docker.sock
             displayName: 'Install Docker'
+          # Restart the agent to apply Docker group changes
+          - script: |
+              sudo systemctl restart docker
+            displayName: 'Restart Docker Service'
 
   - stage: Login
     displayName: 'Docker Login'
