@@ -58,7 +58,7 @@ stages:
 
   - stage: Apply
     displayName: 'Apply Terraform'
-    condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    condition: and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'main'))
     jobs:
       - job: Apply
         displayName: 'Terraform Apply'
