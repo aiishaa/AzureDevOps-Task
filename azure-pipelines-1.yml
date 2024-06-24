@@ -49,7 +49,7 @@ stages:
               containerRegistry: 'docker-hub'
               repository: 'aishafathy/nodeapp'
               command: 'buildAndPush'
-              tags: 'latest'
+              Dockerfile: '**/Dockerfile'
 
   - stage: Deploy
     displayName: 'Deploy Docker Container'
