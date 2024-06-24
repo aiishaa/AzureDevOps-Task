@@ -40,9 +40,8 @@ stages:
               backendServiceAWS: 'aws_for_terraform'
               backendAWSBucketName: 's3-terraform-backend-bucket-123456'
               backendAWSKey: 'terraform.tfstate'
-          - task: TerraformTaskV1@0
+          - task: TerraformTaskV4@4
             inputs:
-              provider: 'aws' 
+              provider: 'aws'
               command: 'plan'
-              commandOptions: '-out=tfplan -input=false'
-              backendServiceAWS: 'aws_for_terraform'
+              environmentServiceNameAWS: 'aws_for_terraform'
