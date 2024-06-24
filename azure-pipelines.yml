@@ -24,6 +24,9 @@ stages:
         displayName: 'Terraform Plan'
         steps:
           - checkout: self
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
           - task: TerraformTaskV1@0
             inputs:
               provider: 'aws' 
