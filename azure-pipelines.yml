@@ -24,6 +24,12 @@ stages:
         displayName: 'Terraform Plan'
         steps:
           - checkout: self
+          - task: AWSShellScript@1
+            inputs:
+              awsCredentials: 'AWS Service Connection'
+              regionName: 'us-east-1'
+              scriptType: 'inline'
+              inlineScript: 'sudo apt install unzip'
           - task: TerraformInstaller@1
             inputs:
               terraformVersion: 'latest'
