@@ -1,0 +1,46 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include: 
+      - 'nodejs-app'
+
+pool:
+  name: aws-agents-pool  
+
+variables:
+  imageName: 'aishafathy/nodeapp:latest' 
+
+stages:
+  - stage: BuildAndPush
+    displayName: 'Build and Push Docker Image'
+    jobs:
+      - job: BuildAndPushJob
+        displayName: 'Build and Push'
+        steps:
+          - checkout: self
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Docker Hub'
+              repository: 'aishafathy/nodeapp'
+              command: 'buildAndPush'
+              tags: '${{ variables.imageName }}'
+
+  - stage: Deploy
+    displayName: 'Deploy Docker Container'
+    jobs:
+      - job: DeployJob
+        displayName: 'Deploy'
+        steps:
+          - checkout: self
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Docker Hub'
+              repository: 'aishafathy/nodeapp'
+              command: 'start'
+              arguments: '-d -p 8080:80 ${imageName}'
