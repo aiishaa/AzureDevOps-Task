@@ -49,14 +49,11 @@ stages:
                 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
                 unzip awscliv2.zip
                 sudo ./aws/install
-          - task: AWSCLI@1
-            inputs:
-              awsCredentials: 'AWS Service Connection'
-              regionName: 'us-east-1'
-              awsCommand: 'secretsmanager'
-              awsSubCommand: 'get-secret-value'
-              awsArguments: '--secret-id development-secrets --query SecretString --output text > terraform.tfvars'
-
+          - script: |
+              # Fetch Terraform variables from AWS Secrets Manager
+              secret_value=$(aws secretsmanager get-secret-value --secret-id MyTerraformVarsSecret --query SecretString --output text)
+              echo "$secret_value" > terraform.tfvars
+            displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
           - task: TerraformTaskV4@4
             inputs:
               provider: 'aws'
