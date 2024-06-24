@@ -15,6 +15,16 @@ variables:
   imageName: 'aishafathy/nodeapp:latest' 
 
 stages:
+  - stage: install_docker
+    displayName: 'install docker'
+    jobs:
+      - job: install_docker
+        displayName: 'install_docker'
+        steps:
+          - task: DockerInstaller@0
+            inputs:
+              dockerVersion: '17.09.0-ce'
+
   - stage: Login
     displayName: 'Login'
     jobs:
