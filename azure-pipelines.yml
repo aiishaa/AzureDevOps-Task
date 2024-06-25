@@ -11,7 +11,7 @@ pr:
 pool:
   name: "aws-agents-pool"
   demands:
-    - Agent.Name -equals terraform-agent
+    - Agent.Name -equals aws-agent
 
 variables:
   imageName: 'aishafathy/nodeapp:latest'
