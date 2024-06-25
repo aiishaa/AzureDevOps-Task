@@ -76,4 +76,4 @@ stages:
                 -e RDS_PORT=$(RDS_PORT) \
                 -e REDIS_HOSTNAME=$(REDIS_HOSTNAME) \
                 -e REDIS_PORT=$(REDIS_PORT) \
-                aishafathy/nodeapp:latest -p 8080:80 $(imageName)'
+                -p 8080:80 $(imageName)'
