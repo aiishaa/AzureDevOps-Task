@@ -39,9 +39,8 @@ stages:
             inputs:
               terraformVersion: 'latest'
 
-  - stage: Plan
-    displayName: 'Plan Terraform'
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  - stage: Init
+    displayName: 'Init Terraform'
     dependsOn: Setup
     jobs:
       - job: Terraform_Initialization
@@ -56,6 +55,12 @@ stages:
               backendAWSBucketName: 's3-terraform-backend-bucket-123456'
               backendAWSKey: 'terraform.tfstate'
 
+
+  - stage: Plan
+    displayName: 'Plan Terraform'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+    dependsOn: Init
+    jobs:
       - job: Terraform_Plan
         displayName: 'Terraform Plan'
         steps:
@@ -73,20 +78,8 @@ stages:
       and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/main')),
       and(ne(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
       )
-    dependsOn: Setup
+    dependsOn: Init
     jobs:
-      - job: Terraform_Initialization
-        displayName: 'Initialize Terraform'
-        steps:
-          - checkout: self
-          - task: TerraformTaskV4@4
-            inputs:
-              provider: 'aws'
-              command: 'init'
-              backendServiceAWS: 'aws_for_terraform'
-              backendAWSBucketName: 's3-terraform-backend-bucket-123456'
-              backendAWSKey: 'terraform.tfstate'
-
       - job: Terraform_Apply
         displayName: 'Terraform Apply'
         steps:
