@@ -69,11 +69,13 @@ stages:
               containerRegistry: 'docker-hub'
               repository: 'aishafathy/nodeapp'
               command: 'run'
-              arguments: '-d \
-                -e RDS_HOSTNAME=$(RDS_HOSTNAME) \
-                -e RDS_USERNAME=$(RDS_USERNAME) \
-                -e RDS_PASSWORD=$(RDS_PASSWORD) \
-                -e RDS_PORT=$(RDS_PORT) \
-                -e REDIS_HOSTNAME=$(REDIS_HOSTNAME) \
-                -e REDIS_PORT=$(REDIS_PORT) \
-                -p 8080:80 $(imageName)'
+              arguments: >
+                -d
+                -e RDS_HOSTNAME=$(RDS_HOSTNAME)
+                -e RDS_USERNAME=$(RDS_USERNAME)
+                -e RDS_PASSWORD=$(RDS_PASSWORD)
+                -e RDS_PORT=$(RDS_PORT)
+                -e REDIS_HOSTNAME=$(REDIS_HOSTNAME)
+                -e REDIS_PORT=$(REDIS_PORT)
+                -p 8080:80
+                $(imageName)
