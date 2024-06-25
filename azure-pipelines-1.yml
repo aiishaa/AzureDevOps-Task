@@ -6,7 +6,7 @@ trigger:
 pool:
   name: aws-agents-pool
   demands:
-    - app-server-agent -equals true
+    - Agent.Name -equals app-server-agent
 
 variables:
   imageName: 'aishafathy/nodeapp:latest' 
