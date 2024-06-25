@@ -39,7 +39,6 @@ stages:
               wget https://releases.hashicorp.com/terraform/1.2.3/terraform_1.2.3_linux_amd64.zip
               unzip terraform_1.2.3_linux_amd64.zip
               sudo mv terraform /usr/local/bin/
-              terraform --version  # Verify installation
             displayName: 'Install Terraform'
 
   - stage: Init
@@ -72,7 +71,6 @@ stages:
               secret_value=$(aws secretsmanager get-secret-value --secret-id development-secrets --query SecretString --output text)
               # Convert JSON secret to terraform.tfvars format
               echo "$secret_value" | jq -r 'to_entries | .[] | "\(.key) = \(.value | tojson)"' > terraform.tfvars
-              cat terraform.tfvars
             displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
               
           - task: TerraformTaskV4@4
@@ -98,7 +96,6 @@ stages:
               secret_value=$(aws secretsmanager get-secret-value --secret-id development-secrets --query SecretString --output text)
               # Convert JSON secret to terraform.tfvars format
               echo "$secret_value" | jq -r 'to_entries | .[] | "\(.key) = \(.value | tojson)"' > terraform.tfvars
-              cat terraform.tfvars
             displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
 
           # - task: TerraformTaskV4@4
