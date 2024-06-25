@@ -1,0 +1,72 @@
+trigger:
+  branches:
+    include: 
+      - 'nodejs-app'
+
+pool:
+  name: aws-agents-pool  
+
+variables:
+  imageName: 'aishafathy/nodeapp:latest' 
+  
+
+stages:
+  - stage: install_docker
+    displayName: 'Install Docker'
+    jobs:
+      - job: InstallDockerJob
+        displayName: 'Install Docker'
+        steps:
+          - script: |
+              # Install Docker
+              curl -fsSL https://get.docker.com -o get-docker.sh
+              sudo sh get-docker.sh
+              sudo usermod -aG docker $(whoami)
+              sudo chmod 666 /var/run/docker.sock
+            displayName: 'Install Docker'
+          # Restart the agent to apply Docker group changes
+          - script: |
+              sudo systemctl restart docker
+            displayName: 'Restart Docker Service'
+
+  - stage: Login
+    displayName: 'Docker Login'
+    dependsOn: install_docker
+    jobs:
+      - job: LoginJob
+        displayName: 'Login to Docker Hub'
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'docker-hub'
+              command: 'login'
+
+  - stage: BuildAndPush
+    displayName: 'Build and Push Docker Image'
+    dependsOn: Login
+    jobs:
+      - job: BuildAndPushJob
+        displayName: 'Build and Push'
+        steps:
+          - checkout: self
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'docker-hub'
+              repository: 'aishafathy/nodeapp'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile'
+
+  - stage: Deploy
+    displayName: 'Deploy Docker Container'
+    dependsOn: BuildAndPush
+    jobs:
+      - job: DeployJob
+        displayName: 'Deploy'
+        steps:
+          - checkout: self
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'docker-hub'
+              repository: 'aishafathy/nodeapp'
+              command: 'run'
+              arguments: '-d -p 8080:80 $(imageName)'
