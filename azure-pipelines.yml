@@ -89,9 +89,9 @@ stages:
         displayName: 'Terraform Apply'
         steps:
           - checkout: self
-          - task: TerraformTaskV4@4
-            inputs:
-              provider: 'aws'
-              command: 'apply'
-              commandOptions: '-var-file=terraform.tfvars --auto-approve'
-              environmentServiceNameAWS: 'aws_for_terraform'
+          # - task: TerraformTaskV4@4
+          #   inputs:
+          #     provider: 'aws'
+          #     command: 'apply'
+          #     commandOptions: '-var-file=terraform.tfvars --auto-approve'
+          #     environmentServiceNameAWS: 'aws_for_terraform'
