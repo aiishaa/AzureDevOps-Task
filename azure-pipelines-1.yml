@@ -26,7 +26,7 @@ stages:
               sudo usermod -aG docker $(whoami)
               sudo chmod 666 /var/run/docker.sock
             displayName: 'Install Docker'
-          # Restart the agent to apply Docker group changes
+            
           - script: |
               sudo systemctl restart docker
             displayName: 'Restart Docker Service'
@@ -79,5 +79,5 @@ stages:
                 -e RDS_PORT=$(RDS_PORT)
                 -e REDIS_HOSTNAME=$(REDIS_HOSTNAME)
                 -e REDIS_PORT=$(REDIS_PORT)
-                -p 8080:80
+                -p 3000:3000
                 $(imageName)
