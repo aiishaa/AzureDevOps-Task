@@ -16,7 +16,6 @@ pr:
 pool:
   name: "aws-agents-pool"
 
-# Define reusable jobs for AWS setup and Terraform tasks
 jobs:
   - job: AWS_Setup
     displayName: 'Setup AWS Environment'
