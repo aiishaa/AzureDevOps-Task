@@ -21,7 +21,6 @@ stages:
       - job: AWS_Setup
         displayName: 'Setup AWS Environment'
         steps:
-          - checkout: self
           - task: AWSShellScript@1
             inputs:
               awsCredentials: 'AWS Service Connection'
@@ -34,10 +33,12 @@ stages:
       - job: Terraform_Installation
         displayName: 'Install Terraform'
         steps:
-          - checkout: self
-          - task: TerraformInstaller@1
-            inputs:
-              terraformVersion: 'latest'
+          - script: |
+              wget https://releases.hashicorp.com/terraform/1.2.3/terraform_1.2.3_linux_amd64.zip
+              unzip terraform_1.2.3_linux_amd64.zip
+              sudo mv terraform /usr/local/bin/
+              terraform --version  # Verify installation
+            displayName: 'Install Terraform'
 
   - stage: Init
     displayName: 'Init Terraform'
