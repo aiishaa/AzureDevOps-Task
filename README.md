@@ -1,5 +1,5 @@
 ### Depolying nodejs app on the private instance
-#### This pipeline runs on the agent 'app-server-agent', and it consists of stages to build the docker image, push the image to dockerhub and run a container from this image that listens on port 3030.
+#### This pipeline runs on the agent 'app-server-agent', and it consists of stages to build the docker image, push the image to dockerhub and run a container from this image that listens on port 3000.
 
 #### Before running the pipeline, make sure that you have these variables in your pipeline:
 
