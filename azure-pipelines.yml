@@ -42,6 +42,7 @@ stages:
   - stage: Plan
     displayName: 'Plan Terraform'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+    dependsOn: Setup
     jobs:
       - job: Terraform_Initialization
         displayName: 'Initialize Terraform'
@@ -72,6 +73,7 @@ stages:
       and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/main')),
       and(ne(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
       )
+    dependsOn: Setup
     jobs:
       - job: Terraform_Initialization
         displayName: 'Initialize Terraform'
