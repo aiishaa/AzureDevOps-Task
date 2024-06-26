@@ -54,21 +54,17 @@ stages:
     displayName: 'Init Terraform'
     dependsOn: Setup
     jobs:
-      - job: Workspace_Selection
-        displayName: 'Select Terraform workspace'
+      - job: Terraform_Initialization
+        displayName: 'Initialize Terraform'
         steps:
+          - checkout: self
           - task: TerraformTaskV4@4
             inputs:
               provider: 'aws'
               command: 'custom'
               outputTo: 'console'
-              customCommand: 'terraform workspace select ${{ parameters.environment }} || terraform workspace new ${{ parameters.environment }}'
+              customCommand: 'terraform workspace select ${{ parameters.environment }}'
               environmentServiceNameAWS: 'aws_for_terraform'
-
-      - job: Terraform_Initialization
-        displayName: 'Initialize Terraform'
-        steps:
-          - checkout: self
           - task: TerraformTaskV4@4
             inputs:
               provider: 'aws'
