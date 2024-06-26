@@ -62,9 +62,10 @@ stages:
             inputs:
               provider: 'aws'
               command: 'custom'
-              outputTo: 'console'
-              customCommand: 'terraform workspace select ${{ parameters.environment }}'
+              customCommand: |
+                terraform workspace select ${{ parameters.environment }} || terraform workspace new ${{ parameters.environment }}
               environmentServiceNameAWS: 'aws_for_terraform'
+
           - task: TerraformTaskV4@4
             inputs:
               provider: 'aws'
