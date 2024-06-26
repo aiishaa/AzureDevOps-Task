@@ -58,13 +58,9 @@ stages:
         displayName: 'Initialize Terraform'
         steps:
           - checkout: self
-          - task: TerraformTaskV4@4
-            inputs:
-              provider: 'aws'
-              command: 'custom'
-              customCommand: |
-                terraform workspace select ${{ parameters.environment }} || terraform workspace new ${{ parameters.environment }}
-              environmentServiceNameAWS: 'aws_for_terraform'
+          - script: |
+              terraform workspace select ${{ parameters.environment }} || terraform workspace new ${{ parameters.environment }}
+            displayName: 'Select or Create Terraform Workspace'
 
           - task: TerraformTaskV4@4
             inputs:
@@ -100,10 +96,10 @@ stages:
 
   - stage: Apply
     displayName: 'Apply Terraform'
-    condition: or(
+    condition: and(succeeded('Init'), or(
       and(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/main')),
       and(ne(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-      )
+      ))  
     dependsOn: Init
     jobs:
       - job: Terraform_Apply
