@@ -58,10 +58,6 @@ stages:
         displayName: 'Initialize Terraform'
         steps:
           - checkout: self
-          - script: |
-              terraform workspace select ${{ parameters.environment }} || terraform workspace new ${{ parameters.environment }}
-            displayName: 'Select or Create Terraform Workspace'
-
           - task: TerraformTaskV4@4
             inputs:
               provider: 'aws'
@@ -69,7 +65,9 @@ stages:
               backendServiceAWS: 'aws_for_terraform'
               backendAWSBucketName: 's3-terraform-backend-bucket-123456'
               backendAWSKey: '${{ parameters.environment }}/terraform.tfstate'
-
+          - script: |
+              terraform workspace select ${{ parameters.environment }} || terraform workspace new ${{ parameters.environment }}
+            displayName: 'Select or Create Terraform Workspace'
 
   - stage: Plan
     displayName: 'Plan Terraform'
