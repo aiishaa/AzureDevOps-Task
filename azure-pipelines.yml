@@ -13,6 +13,15 @@ pool:
   demands:
     - Agent.Name -equals aws-agent
 
+parameters:
+- name: environment
+  displayName: Choose the workspace
+  type: string
+  default: development
+  values:
+  - development
+  - production
+  
 variables:
   imageName: 'aishafathy/nodeapp:latest'
 
@@ -55,7 +64,7 @@ stages:
               command: 'init'
               backendServiceAWS: 'aws_for_terraform'
               backendAWSBucketName: 's3-terraform-backend-bucket-123456'
-              backendAWSKey: 'terraform.tfstate'
+              backendAWSKey: '${{ parameters.environment }}/terraform.tfstate'
 
 
   - stage: Plan
@@ -68,7 +77,8 @@ stages:
         steps:
           - checkout: self
           - script: |
-              secret_value=$(aws secretsmanager get-secret-value --secret-id development-secrets --query SecretString --output text)
+              secret_id="${{ parameters.environment }}-secrets"
+              secret_value=$(aws secretsmanager get-secret-value --secret-id $secret-id --query SecretString --output text)
               # Convert JSON secret to terraform.tfvars format
               echo "$secret_value" | jq -r 'to_entries | .[] | "\(.key) = \(.value | tojson)"' > terraform.tfvars
             displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
@@ -93,7 +103,8 @@ stages:
         steps:
           - checkout: self
           - script: |
-              secret_value=$(aws secretsmanager get-secret-value --secret-id development-secrets --query SecretString --output text)
+              secret_id="${{ parameters.environment }}-secrets"
+              secret_value=$(aws secretsmanager get-secret-value --secret-id $secret-id --query SecretString --output text)
               # Convert JSON secret to terraform.tfvars format
               echo "$secret_value" | jq -r 'to_entries | .[] | "\(.key) = \(.value | tojson)"' > terraform.tfvars
             displayName: 'Fetch Terraform Variables from AWS Secrets Manager'
